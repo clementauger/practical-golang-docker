@@ -1,0 +1,55 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+
+version: '3.7'
+
+# Define services
+services:
+
+  producer:
+    build:
+      context: .
+      dockerfile: producer/Dockerfile
+      target: dev
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment: # Pass environment variables to the service
+      EXPOSE: 8080
+      CONSUMER_URL: consumer:8081
+      REDIS_URL: redis:6379
+    networks:
+      - backend
+    volumes:
+        - ./producer:/gow/src/github.com/clementauger/practical-golang-docker/producer
+
+  consumer:
+    build:
+      context: .
+      dockerfile: consumer/Dockerfile
+      target: dev
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      EXPOSE: 8081
+      PRODUCER_URL: producer:8080
+      REDIS_URL: redis:6379
+    networks:
+      - backend
+    volumes:
+        - ./consumer:/gow/src/github.com/clementauger/practical-golang-docker/consumer
+
+  redis:
+    image: "redis:alpine"
+    restart: unless-stopped
+    networks:
+      - backend
+
+networks:
+  backend:
+    external:
+      name: localdev
