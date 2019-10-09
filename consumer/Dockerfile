@@ -1,23 +1,23 @@
 #
-FROM golang:latest AS reflex
+FROM golang:latest AS grelot
 
 RUN mkdir /gobin
 ENV GOBIN "/gobin"
 ENV PATH "${GOBIN}:${PATH}"
 
-RUN go get github.com/cespare/reflex
-RUN go install github.com/cespare/reflex
+RUN go get github.com/clementauger/grelot
+RUN go install github.com/clementauger/grelot
 
 #
 FROM golang:latest AS builder
 
 RUN mkdir /gobin
-RUN mkdir -p /gow/src/github.com/clementauger/practical-golang-docker/consumer
+RUN mkdir -p /go/src/github.com/clementauger/practical-golang-docker/consumer
 
-WORKDIR /gow/src/github.com/clementauger/practical-golang-docker/
+WORKDIR /go/src/github.com/clementauger/practical-golang-docker/
 COPY . .
 
-WORKDIR /gow/src/github.com/clementauger/practical-golang-docker/consumer
+WORKDIR consumer
 RUN go mod download
 RUN CGO_ENABLED=0 go build -o /gobin/consumer .
 
@@ -27,11 +27,11 @@ FROM golang:latest AS dev
 RUN mkdir /gobin
 ENV GOBIN "/gobin"
 ENV PATH "${GOBIN}:${PATH}"
-COPY --from=reflex /gobin/reflex /gobin/reflex
+COPY --from=grelot /gobin/grelot /gobin/grelot
 
-WORKDIR /gow/src/github.com/clementauger/practical-golang-docker
+WORKDIR /go/src/github.com/clementauger/practical-golang-docker
 COPY . .
-WORKDIR consumer/
+WORKDIR consumer
 
 EXPOSE ${EXPOSE}
 CMD ["make", "reload"]

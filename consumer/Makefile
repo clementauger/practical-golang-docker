@@ -5,13 +5,11 @@ init:
 	export GO111MODULE=on
 	go mod init
 	go mod tidy
-gobuild:
-	go build -o producer .
 reload:
-	reflex -r '\.go$$' -s -- sh -c 'go build -o consumer . && ./consumer'
+	grelot
 build:
-	(cd .. && docker build -t pgr-producer --target=dev -f producer/Dockerfile .)
+	(cd .. && docker build -t pgr-consumer --target=dev -f producer/Dockerfile .)
 run:
 	docker run -it \
-		-v $(shell pwd):/gow/src/github.com/clementauger/practical-golang-docker/producer\
-	 	-p ${EXPOSE}:${EXPOSE} pgr-producer
+		-v $(shell pwd):/go/src/github.com/clementauger/practical-golang-docker/consumer\
+	 	-p ${EXPOSE}:${EXPOSE} pgr-consumer

@@ -1,0 +1,35 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+
+version: '3.7'
+
+# Define services
+services:
+
+  producer:
+    build:
+      context: .
+      dockerfile: producer/Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      EXPOSE: 80
+      PRODUCTION: true
+      CONSUMER_URL: consumer:81
+
+  consumer:
+    build:
+      context: .
+      dockerfile: consumer/Dockerfile
+      # target: dev
+    ports:
+      - "81:81"
+    environment:
+      EXPOSE: 81
+      PRODUCTION: true
+      PRODUCER_URL: producer:80
+
+
+# networks:
+#   backend:
+#     external:
+#       name: practical-golang-docker

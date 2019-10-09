@@ -22,7 +22,7 @@ services:
     networks:
       - backend
     volumes:
-        - ./producer:/gow/src/github.com/clementauger/practical-golang-docker/producer
+        - ./producer:/go/src/github.com/clementauger/practical-golang-docker/producer
 
   consumer:
     build:
@@ -41,7 +41,7 @@ services:
     networks:
       - backend
     volumes:
-        - ./consumer:/gow/src/github.com/clementauger/practical-golang-docker/consumer
+        - ./consumer:/go/src/github.com/clementauger/practical-golang-docker/consumer
 
   redis:
     image: "redis:alpine"
@@ -52,4 +52,4 @@ services:
 networks:
   backend:
     external:
-      name: localdev
+      name: practical-golang-docker
