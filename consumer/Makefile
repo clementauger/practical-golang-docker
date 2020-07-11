@@ -8,7 +8,7 @@ init:
 reload:
 	grelot
 build:
-	(cd .. && docker build -t pgr-consumer --target=dev -f producer/Dockerfile .)
+	(cd .. && docker build -t pgr-consumer --target=dev -f consumer/Dockerfile .)
 run:
 	docker run -it \
 		-v $(shell pwd):/go/src/github.com/clementauger/practical-golang-docker/consumer\
